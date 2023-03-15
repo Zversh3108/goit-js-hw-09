@@ -6,10 +6,10 @@ import 'flatpickr/dist/flatpickr.min.css';
 const refs = {
   dateInput: document.querySelector('[type = "text"]'),
   startBtn: document.querySelector('button'),
-  dataDaysSpan:document.querySelector('[data = "days"]'),
-  dataDaysSpan:document.querySelector('[data = "hours"]'),
-  dataDaysSpan:document.querySelector('[data = "minutes"]'),
-  dataDaysSpan:document.querySelector('[data = "seconds"]'),
+  dataDaysSpan: document.querySelector('[data = "days"]'),
+  dataHoursSpan: document.querySelector('[data = "hours"]'),
+  dataMinutesSpan: document.querySelector('[data = "minutes"]'),
+  dataSecondsSpan: document.querySelector('[data = "seconds"]'),
 };
 let deltaTime = 0;
 const options = {
@@ -19,14 +19,17 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedTime = selectedDates[0].getTime();
-    const curentTime = new Date().getTime();
+                                                        let curentTime = 0
+                                                        setInterval(() => {
+                                                          curentTime = new Date().getTime();
+                                                          deltaTime = selectedTime - curentTime;
+                                                        }, 1000);
     if (selectedTime < curentTime) {
       Notiflix.Notify.failure('Please choose a date in the future', {
         timeout: 4000,
       });
     } else {
-      difference = selectedTime - curentTime;
-      refs.startBtn.disabled = false;
+      refs.startBtn.disabled = false 
     }
   },
 };
@@ -36,7 +39,7 @@ refs.startBtn.disabled = true;
 flatpickr(refs.dateInput, options);
 refs.startBtn.addEventListener('click', startBtnHandler);
 
-function convertMs(ms) {
+function convertMs(ms){
   // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
@@ -52,8 +55,16 @@ function convertMs(ms) {
   // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
+
   return { days, hours, minutes, seconds };
 }
-function startBtnHandler(){
 
-}
+
+
+  function startBtnHandler(){
+    setInterval(() => {
+      const { days, hours, minutes, seconds } = convertMs(deltaTime)
+    
+    }, 1000);
+    
+  }

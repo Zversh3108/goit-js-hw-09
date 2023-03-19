@@ -12,7 +12,7 @@ const refs = {
   dataSecondsSpan: document.querySelector('[data-seconds]'),
 };
 refs.startBtn.disabled = true;
-let curentTime;
+
 let deltaTime;
 const options = {
   enableTime: true,
@@ -22,17 +22,15 @@ const options = {
   onClose(selectedDates) {
     const selectedTime = selectedDates[0].getTime();
 
-    setInterval(() => {
-      curentTime = new Date().getTime();
-      deltaTime = selectedTime - curentTime;
-    }, 1000);
-
-    if (selectedTime < curentTime) {
+    if (selectedTime < new Date().getTime()) {
       Notiflix.Notify.failure('Please choose a date in the future', {
         timeout: 4000,
       });
     } else {
       refs.startBtn.disabled = false;
+      setInterval(() => {
+        deltaTime = selectedTime - new Date().getTime();
+      }, 1000);
     }
   },
 };
@@ -42,6 +40,7 @@ refs.startBtn.addEventListener('click', startBtnHandler);
 function pad(value) {
   return String(value).padStart(2, '0');
 }
+
 function convertMs(ms) {
   const second = 1000;
   const minute = second * 60;
